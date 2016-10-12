@@ -1,0 +1,100 @@
+CHANGES
+=======
+
+* Bare Metal Support
+* Fix PEP8 errors in MLX plugin
+* Adding Non-ampp support for VDX
+* Support for enable password configuration
+* Fixes netconf timeout issue
+* Update Brocade MLX plugin from Neutron decomposition
+* Update README to reflect new repo location
+* Update .gitreview to reflect new repository name
+* Updating requirements and test-requirements files
+* fix l3 plugin to work for 5600 router
+* Add multiple IPv6 prefixes support
+* Add generic InterfaceInfo and RouterConfig class
+* Add MultiDict class implementation
+* Fix _create_gw_port interface update
+* Update unit tests
+* Delete port security bindings on existing port
+* add_port_security_extension_support
+* Add text to README.rst describing MDs and Plugins
+* update test code after the unittest reorg
+* Add extra parameter in _make_router_interface_info
+* Use custom RouterInfo for L3 agent
+* Remove methods override from L3AgentMiddleware
+* Removed built-in transaction support
+* Remove testlib_plugin ref from l3 plugin
+* Handle unsupported network types
+* Removed config registration
+* Adjust imports for re-organized neutron unit test tree
+* Code refactor to sync with Firewall Insertion Model implementation
+* Fix unit test failures for delete ipv6 and clear gateway issues
+* Enabling MLX ML2 unit tests
+* remove neutron.common.log imports and update to oslo.log
+* Update cfg registrations based on changes made to shims
+* Fix logging imports to oslo log
+* Oslo logging changes requires import change for logging
+* Add ML2 VLAN mechanism driver for Brocade MLX and ICX switches
+* Fixing import of the decomposed nos driver
+* Enable unit test on vdx platform
+* Remove model completely from stackforge leave in neutron
+* Move the extension alias from neutron_plugin to shim plugin in neutron tree
+* Fix typo in import pathname
+* Import pathname must be from repo specific locations
+* Fix MySQL deadlock issue
+* Remove neutron root_helper reference
+* Fix networking-brocade unit tests changes and vyatta imports
+* Fix import pathnames, based on new path at networking_brocade
+* Change import pathnames based now off networking_brocade
+* Fix unit test paths
+* restructure vdx md directory, reduce depth
+* Restructure repo to allow for multiple products
+* Updating .gitreview file and adding cookie cutter files
+* Generated new .gitreview file for brocade/vdx-AmppML2-SVI
+* hacking: enable H238 (old style class declaration, use new style)
+* brocade: Use lazy logging interpolation
+
+2015.1.0b1
+----------
+
+* tests: initialize admin context after super().setUp call
+* Migrate to oslo.context
+* Migrate to oslo.i18n
+* Migrate to oslo.utils
+* Update i18n translation for ML2 plugin log msg's
+* Enforce log hints in neutron.services.l3_router
+* enable H401 hacking check
+* Use correct base class for unit tests for ML2 drivers
+* Remove superfluous except/re-raise
+
+2014.2.1
+--------
+
+* Remove @author(s) from copyright statements
+* Layer 3 service plugin to support hardware based routing
+
+2014.2.b3
+---------
+
+* Added support for NOS version 4.1.0, 5.0.0 and greater
+* Remove the useless vim modelines
+* Brocade mechanism driver depends on the brocade plugin templates
+* Brocade mechanism driver should be derived from ML2 plugin base class
+
+2014.2.b1
+---------
+
+* Use save_and_reraise_exception when reraise exception
+* Remove individual cfg.CONF.resets from tests
+* Fixed Spelling error in Readme
+
+2014.1.b3
+---------
+
+* Implementaion of Mechanism driver for Brocade VDX cluster of switches
+
+2014.1.b2
+---------
+
+* Pushing initial started code based on Glance project and infrstructure work done by the melange team
