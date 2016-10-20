@@ -1,0 +1,32 @@
+---
+description: Configure Trunk Vlan on Interface workflow.
+enabled: true
+entry_point: workflows/configure_trunk_vlan_on_interface.yaml
+name: configure_trunk_vlan_on_interface 
+pack: brcd_openstack 
+parameters:
+  switch_address:
+    type: string
+    description: Switch Management IP Address
+    required: true
+  switch_username:
+    type: string
+    description: Switch Username
+    required: true
+  switch_password:
+    type: string
+    description: Switch Password
+    required: true
+  interface_name:
+    type: string
+    description: interface_name
+    required: true
+  interface_type:
+    type: string
+    description: interface_type
+    required: true
+  vlan:
+    type: string
+    description: vlan
+    required: true
+runner_type: mistral-v2

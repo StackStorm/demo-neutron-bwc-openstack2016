@@ -1,0 +1,24 @@
+---
+name: bwc_delete_network 
+pack: brcd_openstack 
+runner_type: run-python
+description: De Configure Network on VDX Switches
+enabled: true
+entry_point: bwc_delete_network.py
+parameters:
+  switch_address:
+    type: string
+    description: Switch Management IP Address 
+    required: true
+  switch_username:
+    type: string
+    description: Switch Username 
+    required: true
+  switch_password:
+    type: string
+    description: Switch Password 
+    required: true
+  vlan:
+    type: string
+    description: Switch Password 
+    required: true

@@ -1,0 +1,24 @@
+---
+description: openstack create network workflow.
+enabled: true
+entry_point: workflows/create_network.yaml
+name: create_network 
+pack: brcd_openstack 
+parameters:
+  switch_address:
+    type: string
+    description: Switch Management IP Address
+    required: true
+  switch_username:
+    type: string
+    description: Switch Username
+    required: true
+  switch_password:
+    type: string
+    description: Switch Password
+    required: true
+  vlan:
+    type: string
+    description: Switch Password
+    required: true
+runner_type: mistral-v2

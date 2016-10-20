@@ -1,0 +1,86 @@
+---
+version: '2.0'
+
+brcd_openstack.create_network:
+  
+  input:
+    - switch_address
+    - switch_username
+    - switch_password
+    - vlan
+  tasks:
+
+    notify_on_slack:
+      # [105, 26]
+      action: chatops.post_message
+      input:
+        channel: "lkhtesting"
+        message: "New network with VLAN <% $.vlan %> created on Openstack! Attempting to create VLAN on switch <% $.switch_address %>"
+      on-success:
+        - push_network_to_switch
+      on-error:
+        - report_failure
+    push_network_to_switch:
+      # [175, 128]
+      action: brcd_openstack.bwc_create_network
+      input:
+        switch_address: <% $.switch_address %>
+        switch_username: <% $.switch_username %>
+        switch_password: <% $.switch_password %>
+        vlan: <% $.vlan %>
+      on-success:
+        - send_success_msg_to_slack
+        - show_vlan_br
+      on-error:
+        - push_network_failed 
+    send_success_msg_to_slack:
+      # [525, 740]
+      action: chatops.post_message
+      input:
+        message: "VLAN <% $.vlan %> has been successfully created on switch <% $.switch_address %>"
+        channel: "lkhtesting"
+      on-error:
+        - report_failure
+    show_vlan_br:
+      # [175, 128]
+      action: clicrud.ops_command
+      input:
+        host: <% $.switch_address %>
+        command: "show vlan br"
+      on-success:
+        - send_show_vlan_br_to_slack
+      on-error:
+        - report_failure
+    send_show_vlan_br_to_slack:
+      # [175, 230]
+      action: chatops.post_message
+      input:
+        message: <% task(show_vlan_br).result.result %>
+        channel: "lkhtesting"
+      on-error:
+        - report_failure
+    push_network_failed:
+      action: chatops.post_message
+      input:
+        message: "VLAN <% $.vlan %> creation failed on switch <% $.switch_address %>! Submitting a JIRA issue"
+        channel: "lkhtesting"
+      on-success:
+        - create_jira_issue
+      on-error:
+        - report_failure
+    create_jira_issue:
+      # [638, 743]
+      action: jira.create_issue
+      input:
+        type: "IT Help"
+        summary: "Openstack network push failed"
+        description:  "Failed to push new Openstack network VLAN <% $.vlan %> to switch <% $.switch_address %>\n<% task(push_network_to_switch).result.stderr %>"
+      on-error:
+        - report_failure
+    report_failure:
+      # [145, 944]
+      action: chatops.post_message
+      input:
+        message: "Something went wrong in creating VLAN <% $.vlan %> on switch <% $.switch_address %>"
+        channel: "lkhtesting"
+        

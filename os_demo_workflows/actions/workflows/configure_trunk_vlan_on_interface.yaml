@@ -1,0 +1,91 @@
+---
+version: '2.0'
+
+brcd_openstack.configure_trunk_vlan_on_interface:
+  
+  input:
+    - switch_address
+    - switch_username
+    - switch_password
+    - interface_name
+    - interface_type
+    - vlan
+  tasks:
+
+    notify_on_slack:
+      # [175, 26]
+      action: chatops.post_message
+      input:
+        channel: "lkhtesting"
+        message: "Attempting to add trunk VLAN <% $.vlan %> on interface <% $.interface_type %> <% $.interface_name %> of switch <% $.switch_address %>" 
+      on-success:
+        - push_vlan_on_interface
+      on-error:
+        - report_failure
+    push_vlan_on_interface:
+      # [315, 128]
+      action: brcd_openstack.bwc_configure_trunk_vlan_on_interface
+      input:
+        switch_address: <% $.switch_address %>
+        switch_username: <% $.switch_username %>
+        switch_password: <% $.switch_password %>
+        interface_name: <% $.interface_name %>
+        interface_type: <% $.interface_type %>
+        vlan: <% $.vlan %>
+      on-success:
+        - send_success_msg_to_slack
+        - show_run_interface
+      on-error:
+        - tag_interface_failed
+    send_success_msg_to_slack:
+      # [105, 332]
+      action: chatops.post_message
+      input:
+        message: "Trunk VLAN <% $.vlan %> has been successfully added on interface <% $.interface_type %> <% $.interface_name %> of switch <% $.switch_address %>"
+        channel: "lkhtesting"
+      on-error:
+        - report_failure
+    show_run_interface:
+      # [315, 230]
+      action: clicrud.ops_command
+      input:
+        host: <% $.switch_address %>
+        command: "show run interface <% $.interface_type %> <% $.interface_name %>"
+      on-success:
+        - send_show_run_interface_to_slack
+      on-error:
+        - report_failure
+    send_show_run_interface_to_slack:
+      # [385, 332]
+      action: chatops.post_message
+      input:
+        message: <% task(show_run_interface).result.result %>
+        channel: "lkhtesting"
+      on-error:
+        - report_failure
+    tag_interface_failed:
+      # [595, 230]
+      action: chatops.post_message
+      input:
+        message: "Failed to add VLAN <% $.vlan %> on interface <% $.interface_type %> <% $.interface_name %> of switch <% $.switch_address %>! Submitting a JIRA issue"
+        channel: "lkhtesting"
+      on-success:
+        - create_jira_issue
+      on-error:
+        - report_failure
+    create_jira_issue:
+      # [665, 332]
+      action: jira.create_issue
+      input:
+        type: "IT Help"
+        summary: "Openstack VLAN add on interface failed"
+        description:  "Failed to push new Openstack network VLAN <% $.vlan %> to switch <% $.switch_address %>\n<% task(push_vlan_on_interface).result.stderr %>"
+      on-error:
+        - report_failure
+    report_failure:
+      # [315, 434]
+      action: chatops.post_message
+      input:
+        message: "Something went wrong in adding VLAN <% $.vlan %> on interface <% $.interface_type %> <% $.interface_name %> of switch <% $.switch_address %>!"
+        channel: "lkhtesting"
+        

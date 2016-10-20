@@ -1,0 +1,32 @@
+---
+name: bwc_configure_trunk_vlan_on_interface 
+pack: brcd_openstack 
+runner_type: run-python
+description: Configure Trunk Vlan on Interface 
+enabled: true
+entry_point: bwc_configure_trunk_vlan_on_interface.py
+parameters:
+  switch_address:
+    type: string
+    description: Switch Management IP Address 
+    required: true
+  switch_username:
+    type: string
+    description: Switch Username 
+    required: true
+  switch_password:
+    type: string
+    description: Switch Password 
+    required: true
+  interface_name:
+    type: string
+    description: interface_name 
+    required: true
+  interface_type:
+    type: string
+    description: interface_type 
+    required: true
+  vlan:
+    type: string
+    description: vlan 
+    required: true
