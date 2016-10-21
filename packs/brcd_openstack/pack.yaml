@@ -1,4 +1,5 @@
-me : brcd_openstack 
+---
+name : brcd_openstack 
 description : Brocade Openstack 
 version : 0.1
 author : Ritesh Madapurath
