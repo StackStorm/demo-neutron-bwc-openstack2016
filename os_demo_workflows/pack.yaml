@@ -1,6 +1,0 @@
----
-name : brcd_openstack 
-description : Modified version of orig brcd_openstack pack with OS + BWC demo workflows
-version : 0.1
-author : Siddharth Krishna 
-email : sidd@brocade.com 
