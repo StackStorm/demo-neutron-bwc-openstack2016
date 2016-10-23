@@ -1,24 +1,24 @@
 ---
+description: openstack delete network workflow.
+enabled: true
+entry_point: workflows/delete_network.yaml
 name: delete_network 
 pack: brcd_openstack 
-runner_type: run-python
-description: De Configure Network on VDX Switches
-enabled: true
-entry_point: delete_network.py
 parameters:
   switch_address:
     type: string
-    description: Switch Management IP Address 
+    description: Switch Management IP Address
     required: true
   switch_username:
     type: string
-    description: Switch Username 
+    description: Switch Username
     required: true
   switch_password:
     type: string
-    description: Switch Password 
+    description: Switch Password
     required: true
   vlan:
     type: string
-    description: Switch Password 
+    description: Switch Password
     required: true
+runner_type: mistral-v2

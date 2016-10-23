@@ -1,0 +1,67 @@
+---
+version: '2.0'
+
+brcd_openstack.delete_network:
+  
+  input:
+    - switch_address
+    - switch_username
+    - switch_password
+    - vlan
+  tasks:
+
+    notify_on_slack:
+      # [105, 26]
+      action: chatops.post_message
+      input:
+        channel: "lkhtesting"
+        message: "Network with VLAN <% $.vlan %> deleted on Openstack!, Attempting to delete VLAN from Switch <% $.switch_address %>"
+      on-success:
+        - delete_network_from_switch
+      on-error:
+        - report_failure
+    delete_network_from_switch:
+      # [175, 128]
+      action: brcd_openstack.bwc_delete_network
+      input:
+        switch_address: <% $.switch_address %>
+        switch_username: <% $.switch_username %>
+        switch_password: <% $.switch_password %>
+        vlan: <% $.vlan %>
+      on-success:
+        - send_success_msg_to_slack
+      on-error:
+        - delete_network_failed
+    send_success_msg_to_slack:
+      # [525, 740]
+      action: chatops.post_message
+      input:
+        message: "VLAN <% $.vlan %> has been successfully deleted on Switch <% $.switch_address %>"
+        channel: "lkhtesting"
+      on-error:
+        - report_failure
+    delete_network_failed:
+      action: chatops.post_message
+      input:
+        message: "VLAN <% $.vlan %> delete failed on switch <% $.switch_address %>! Submitting a JIRA issue"
+        channel: "lkhtesting"
+      on-success:
+        - create_jira_issue
+      on-error:
+        - report_failure
+    create_jira_issue:
+      # [638, 743]
+      action: jira.create_issue
+      input:
+        type: "IT Help"
+        summary: "Openstack network delete failed"
+        description:  "Failed to delete Openstack network VLAN <% $.vlan %> to switch <% $.switch_address %>\n<% task(delete_network_from_switch).result.stderr %>"
+      on-error:
+        - report_failure
+    report_failure:
+      # [145, 944]
+      action: chatops.post_message
+      input:
+        message: "Something went wrong in deleting VLAN <% $.vlan %> from Switch <% $.switch_address %>!"
+        channel: "lkhtesting"
+        
