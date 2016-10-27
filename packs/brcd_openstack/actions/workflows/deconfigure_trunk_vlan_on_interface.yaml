@@ -35,7 +35,7 @@ brcd_openstack.deconfigure_trunk_vlan_on_interface:
       on-success:
         - send_success_msg_to_slack
       on-error:
-        - untag_inteface_failed 
+        - untag_interface_failed 
     send_success_msg_to_slack:
       # [525, 740]
       action: chatops.post_message
